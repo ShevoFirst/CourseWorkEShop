@@ -51,12 +51,12 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public ExtendedAdDTO getInfoByAd(int id) {
-        return adMapper.toExtendedAdDTO(adRepository.findById(id).get());
+        return adMapper.toExtendedAdDTO(adRepository.findById(id).orElse(null));
     }
 
     @Override
     public void deleteAd(int id) {
-        commentRepository.deleteAllByAdEntity(adRepository.findById(id).get());
+        commentRepository.deleteAllByAdEntity(adRepository.findById(id).orElse(null));
         adRepository.deleteById(id);
     }
 
@@ -77,8 +77,9 @@ public class AdServiceImpl implements AdService {
 
     @Override
     public OctetStreamData updateImage(int id, MultipartFile image) throws IOException {
-        AdEntity ad = adRepository.findById(id).get();
+        AdEntity ad = adRepository.findById(id).orElse(null);
         ImageEntity imageEntity = imageService.downloadImage(image);
+        assert ad != null;
         ad.setImage(imageEntity);
         adRepository.saveAndFlush(ad);
         return new OctetStreamData(image.getInputStream());

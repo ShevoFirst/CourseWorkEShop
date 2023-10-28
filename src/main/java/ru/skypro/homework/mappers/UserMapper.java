@@ -1,5 +1,5 @@
 package ru.skypro.homework.mappers;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.Register;
@@ -10,7 +10,8 @@ import ru.skypro.homework.service.entities.UserEntity;
 
 @Component
 public class UserMapper {
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public UserEntity userEntityUpdate(UpdateUserDTO updateUserDTO,
                                        UserEntity userEntity) {
         userEntity.setFirstName(updateUserDTO.getFirstName());
@@ -33,10 +34,9 @@ public class UserMapper {
         userDTO.setLastName(userEntity.getLastName());
         userDTO.setFirstName(userEntity.getFirstName());
         userDTO.setEmail(userEntity.getEmail());
-        if (userEntity.getImageEntity() == null){
-            userDTO.setImage(null);
-        }else
+        if (userEntity.getImageEntity() != null){
             userDTO.setImage("/images/" + userEntity.getImageEntity().getImageName());
+        }
         userDTO.setPhone(userEntity.getPhone());
         return userDTO;
     }
@@ -44,17 +44,12 @@ public class UserMapper {
     public UserEntity toUserEntity(Register register) {
         UserEntity userEntity = new UserEntity();
         userEntity.setEmail(register.getUsername());
-        userEntity.setPassword(passwordEncoder().encode(register.getPassword()));
+        userEntity.setPassword(passwordEncoder.encode(register.getPassword()));
         userEntity.setFirstName(register.getFirstName());
         userEntity.setLastName(register.getLastName());
         userEntity.setPhone(register.getPhone());
         userEntity.setRole(register.getRole());
         return userEntity;
     }
-
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
 
 }

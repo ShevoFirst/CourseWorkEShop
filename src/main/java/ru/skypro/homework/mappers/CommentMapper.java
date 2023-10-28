@@ -8,7 +8,6 @@ import ru.skypro.homework.service.entities.UserEntity;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZoneOffset;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -17,10 +16,9 @@ public class CommentMapper {
 
     public CommentDTO toCommentDto(CommentEntity commentEntity) {
         CommentDTO commentDTO = new CommentDTO();
-        if (commentEntity.getUser().getImageEntity() == null) {
-            commentDTO.setAuthorImage(null);
-        } else
+        if (commentEntity.getUser().getImageEntity() != null) {
             commentDTO.setAuthorImage("/images/" + commentEntity.getUser().getImageEntity().getImageName());
+        }
         commentDTO.setAuthor(commentEntity.getId());
         commentDTO.setAuthorFirstName(commentEntity.getUser().getFirstName());
         commentDTO.setCreatedAt(commentEntity.getCreatedAt()

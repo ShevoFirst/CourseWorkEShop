@@ -1,9 +1,7 @@
 package ru.skypro.homework.service.impl;
 
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import ru.skypro.homework.service.ImageService;
@@ -59,7 +57,7 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public ResponseEntity<byte[]> getUserImage(String id) {
+    public byte[] getUserImage(String id) {
         try {
             String imagePath = DOWNLOAD_DIRECTORY + id + ".jpg";
             byte[] imageBytes = loadFile(imagePath);
@@ -67,7 +65,7 @@ public class ImageServiceImpl implements ImageService {
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.IMAGE_JPEG);
 
-            return new ResponseEntity<>(imageBytes, headers, HttpStatus.OK);
+            return imageBytes;
         } catch (IOException e) {
             throw new RuntimeException("Ошибка загрузки изображения " + e.getMessage());
         }

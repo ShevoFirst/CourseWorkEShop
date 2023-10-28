@@ -1,7 +1,7 @@
 package ru.skypro.homework.service.impl;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.skypro.homework.dto.Register;
@@ -9,7 +9,6 @@ import ru.skypro.homework.config.SecurityUserDetailsService;
 import ru.skypro.homework.exeptions.BadRequestException;
 import ru.skypro.homework.mappers.UserMapper;
 import ru.skypro.homework.service.AuthService;
-import ru.skypro.homework.service.entities.UserEntity;
 import ru.skypro.homework.service.repositories.UserRepository;
 
 @Service
@@ -19,10 +18,8 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public PasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     public AuthServiceImpl(SecurityUserDetailsService securityUserDetailsService, UserRepository userRepository, UserMapper userMapper) {
         this.securityUserDetailsService = securityUserDetailsService;
         this.userRepository = userRepository;
@@ -32,7 +29,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public boolean login(String userName, String password) {
         UserDetails userDetails = securityUserDetailsService.loadUserByUsername(userName);
-        return passwordEncoder().matches(password, userDetails.getPassword());
+        return passwordEncoder.matches(password, userDetails.getPassword());
     }
 
     @Override

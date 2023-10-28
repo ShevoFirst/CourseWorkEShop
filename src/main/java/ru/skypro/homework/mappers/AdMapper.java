@@ -23,7 +23,9 @@ public class AdMapper{
         adDTO.pk( ad.getPk() );
         adDTO.price( ad.getPrice() );
         adDTO.title( ad.getTitle() );
-        adDTO.image( "/images/" + ad.getImage().getImageName() );
+        if (ad.getImage()!=null){
+            adDTO.image( "/images/" + ad.getImage().getImageName() );
+        }
         adDTO.author( ad.getUser().getId() );
 
         return adDTO.build();
@@ -36,7 +38,7 @@ public class AdMapper{
 
         CreateOrUpdateAdDTO.CreateOrUpdateAdDTOBuilder createOrUpdateAdDTO = CreateOrUpdateAdDTO.builder();
 
-        createOrUpdateAdDTO.title( String.valueOf( ad.getTitle() ) );
+        createOrUpdateAdDTO.title( ad.getTitle() );
         createOrUpdateAdDTO.price( ad.getPrice() );
         createOrUpdateAdDTO.description( ad.getDescription() );
 
@@ -52,9 +54,11 @@ public class AdMapper{
 
         extendedAdDTO.pk( ad.getPk() );
         extendedAdDTO.description( ad.getDescription() );
-        extendedAdDTO.image( "/images/" + ad.getImage().getImageName());
+        if (ad.getImage()!=null){
+            extendedAdDTO.image( "/images/" + ad.getImage().getImageName());
+        }
         extendedAdDTO.price( ad.getPrice() );
-        extendedAdDTO.title( String.valueOf( ad.getTitle() ) );
+        extendedAdDTO.title( ad.getTitle() );
         extendedAdDTO.authorFirstName(ad.getUser().getFirstName());
         extendedAdDTO.authorLastName(ad.getUser().getLastName());
         extendedAdDTO.phone(ad.getUser().getPhone());
@@ -80,11 +84,9 @@ public class AdMapper{
             return null;
         }
         List<AdDTO> adDTO = new ArrayList<AdDTO>(ad.size());
-        int count=0;
         for (AdEntity adEntity : ad) {
-            count++;
             adDTO.add(toAdDto(adEntity));
         }
-        return new AdsDTO(count,adDTO);
+        return new AdsDTO(ad.size(),adDTO);
     }
 }
