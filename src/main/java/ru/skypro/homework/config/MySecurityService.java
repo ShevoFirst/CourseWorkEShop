@@ -3,13 +3,12 @@ package ru.skypro.homework.config;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import ru.skypro.homework.exeptions.NotFoundException;
+import org.webjars.NotFoundException;
 import ru.skypro.homework.service.entities.AdEntity;
 import ru.skypro.homework.service.entities.CommentEntity;
 import ru.skypro.homework.service.repositories.AdRepository;
 import ru.skypro.homework.service.repositories.CommentRepository;
 
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service

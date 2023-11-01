@@ -4,7 +4,6 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.springframework.stereotype.Component;
-import ru.skypro.homework.dto.UserDto;
 
 @Component
 @RequiredArgsConstructor

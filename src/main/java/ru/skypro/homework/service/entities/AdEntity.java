@@ -25,23 +25,18 @@ public class AdEntity {
     @JoinColumn(name = "id")
     UserEntity user; //user
 
-    @Column(name = "author", nullable = false)
-    int author;
-
     @Column(name = "price", nullable = false)
     int price;
 
     @Column(name = "title", nullable = false)
     String title;
 
-    @Column(name = "image", nullable = false)
-    String image;
+    @OneToOne(targetEntity = ImageEntity.class, fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @JoinColumn(name = "image")
+    ImageEntity image;
 
     @Column(name = "description", nullable = false)
     String description;
-
-    @Column(name = "phone", nullable = false)
-    String phone;
 
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "adEntity")
     List<CommentEntity> commentEntityList = new ArrayList<>();
