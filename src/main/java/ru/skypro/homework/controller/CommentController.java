@@ -1,54 +1,92 @@
 package ru.skypro.homework.controller;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.experimental.FieldDefaults;
-import org.springframework.http.HttpStatus;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.homework.dto.AdsDTO;
 import ru.skypro.homework.dto.CommentDTO;
+import ru.skypro.homework.dto.CommentsDTO;
+import ru.skypro.homework.dto.CreateOrUpdateCommentDTO;
+import ru.skypro.homework.service.CommentService;
 
-import javax.transaction.Transactional;
 
+
+@Log4j2
 @CrossOrigin(value = "http://localhost:3000")
 @RequiredArgsConstructor
 @FieldDefaults(makeFinal = true, level = AccessLevel.PRIVATE)
 @RestController
 @RequestMapping("/ads")
 public class CommentController {
+    CommentService commentService;
 
     @Operation(summary = "Получение комментариев объявления")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
     @GetMapping("/{id}/comments")
-    public ResponseEntity<AdsDTO> receivingAdComments(@PathVariable int id) {
+    public ResponseEntity<CommentsDTO> receivingAdComments(@PathVariable int id) {
 
-        AdsDTO adsDTO = new AdsDTO();
+        CommentsDTO commentsDTO = commentService.receivingAdComments(id);
+        log.info("Comment received");
 
-        return ResponseEntity.ok().body(adsDTO);
+        return ResponseEntity.ok().body(commentsDTO);
     }
 
     @Operation(summary = "Добавление комментария к объявлению")
-    @PostMapping("/{id}/comments")
-    public ResponseEntity<CommentDTO> addComment(@PathVariable int id, @RequestBody String text) {
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
+    @PostMapping("/{adId}/comments")
+    public ResponseEntity<CommentDTO> addComment(@PathVariable int adId, @RequestBody CreateOrUpdateCommentDTO text) {
 
-        CommentDTO commentDTO = new CommentDTO();
+        CommentDTO newCommentDto = commentService.addComment(adId, text);
 
-        return ResponseEntity.ok().body(commentDTO);
+        return ResponseEntity.ok().body(newCommentDto);
     }
 
     @Operation(summary = "Удаление комментария")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
+
     @DeleteMapping("/{adId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable int adId, @PathVariable int commentId) {
+
+        commentService.deleteComment(adId, commentId);
 
         return ResponseEntity.ok().build();
     }
 
-    @Operation(summary = "Удаление комментария")
-    @DeleteMapping("/{adId}/comments/{commentId}")
-    public ResponseEntity<CommentDTO> updateComment(@PathVariable int adId, @PathVariable int commentId){
+    @Operation(summary = "Обновление комментария")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "OK"),
+            @ApiResponse(responseCode = "401", description = "Unauthorized"),
+            @ApiResponse(responseCode = "403", description = "Forbidden"),
+            @ApiResponse(responseCode = "404", description = "Not found")
+    })
+    @PatchMapping("/{adId}/comments/{commentId}")
+    public ResponseEntity<CommentDTO> updateComment(@PathVariable int adId,
+                                                    @PathVariable int commentId,
+                                                    @RequestBody CreateOrUpdateCommentDTO text) {
 
-        CommentDTO commentDTO = new CommentDTO();
+        CommentDTO commentDTO = commentService.updateComment(adId, commentId, text);
+
         return ResponseEntity.ok().body(commentDTO);
     }
 }

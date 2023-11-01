@@ -1,0 +1,51 @@
+package ru.skypro.homework.mappers;
+
+import org.springframework.stereotype.Component;
+import ru.skypro.homework.dto.*;
+import ru.skypro.homework.service.entities.AdEntity;
+import ru.skypro.homework.service.entities.CommentEntity;
+import ru.skypro.homework.service.entities.UserEntity;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.List;
+import java.util.stream.Collectors;
+
+@Component
+public class CommentMapper {
+
+    public CommentDTO toCommentDto(CommentEntity commentEntity) {
+        CommentDTO commentDTO = new CommentDTO();
+        if (commentEntity.getUser().getImageEntity() != null) {
+            commentDTO.setAuthorImage("/images/" + commentEntity.getUser().getImageEntity().getImageName());
+        }
+        commentDTO.setAuthor(commentEntity.getId());
+        commentDTO.setAuthorFirstName(commentEntity.getUser().getFirstName());
+        commentDTO.setCreatedAt(commentEntity.getCreatedAt()
+                .atZone(ZoneId.of("Europe/Moscow"))
+                .toInstant()
+                .toEpochMilli());
+        commentDTO.setPk(commentEntity.getId());
+        commentDTO.setText(commentEntity.getText());
+        return commentDTO;
+    }
+
+    public List<CommentDTO> toCommentDTOList(List<CommentEntity> commentEntityList) {
+        return commentEntityList.stream()
+                .map(this::toCommentDto)
+                .collect(Collectors.toList());
+    }
+
+    public CommentEntity createCommentEntity(CreateOrUpdateCommentDTO commentText,
+                                             AdEntity adEntity,
+                                             UserEntity userEntity) {
+        CommentEntity newCommentEntity = new CommentEntity();
+        newCommentEntity.setText(commentText.getText());
+        newCommentEntity.setCreatedAt(LocalDateTime.now());
+        newCommentEntity.setUser(userEntity);
+        newCommentEntity.setAdEntity(adEntity);
+        return newCommentEntity;
+    }
+
+}
+
