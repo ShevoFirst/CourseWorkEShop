@@ -1,5 +1,4 @@
 package ru.skypro.homework.mappers;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import ru.skypro.homework.dto.Register;
@@ -10,8 +9,12 @@ import ru.skypro.homework.service.entities.UserEntity;
 
 @Component
 public class UserMapper {
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+
+    public UserMapper(PasswordEncoder passwordEncoder) {
+        this.passwordEncoder = passwordEncoder;
+    }
+
     public UserEntity userEntityUpdate(UpdateUserDTO updateUserDTO,
                                        UserEntity userEntity) {
         userEntity.setFirstName(updateUserDTO.getFirstName());

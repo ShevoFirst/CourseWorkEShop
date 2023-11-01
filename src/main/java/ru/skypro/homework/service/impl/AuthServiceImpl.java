@@ -1,6 +1,5 @@
 package ru.skypro.homework.service.impl;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,12 +17,12 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-    public AuthServiceImpl(SecurityUserDetailsService securityUserDetailsService, UserRepository userRepository, UserMapper userMapper) {
+    private final PasswordEncoder passwordEncoder;
+    public AuthServiceImpl(SecurityUserDetailsService securityUserDetailsService, UserRepository userRepository, UserMapper userMapper, PasswordEncoder passwordEncoder) {
         this.securityUserDetailsService = securityUserDetailsService;
         this.userRepository = userRepository;
         this.userMapper = userMapper;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
