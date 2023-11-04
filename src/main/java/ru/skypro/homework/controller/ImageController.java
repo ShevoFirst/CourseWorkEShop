@@ -20,6 +20,7 @@ public class ImageController {
 
     @GetMapping(value = "/{id}", produces = MediaType.IMAGE_JPEG_VALUE)
     public byte[] getUserImage(@PathVariable String id) {
+        System.out.println(id);
         return imageService.getUserImage(id);
     }
 }

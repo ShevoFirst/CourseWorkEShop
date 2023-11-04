@@ -38,7 +38,10 @@ public class UserServiceImpl implements UserService {
         this.passwordEncoder = passwordEncoder;
         this.imageService = imageService;
     }
-
+    // Метод updateUser обновляет данные пользователя
+    // В параметре передается объект UpdateUserDTO с новыми данными пользователя
+    // Метод получает текущего пользователя, обновляет его данные с помощью маппера,
+    // сохраняет изменения в БД и возвращает объект UpdateUserDTO с обновленными данными.
     @Override
     public UpdateUserDTO updateUser(UpdateUserDTO updateUserDTO) {
         UserEntity userEntity = getCurrentUser();
@@ -48,13 +51,18 @@ public class UserServiceImpl implements UserService {
 
         return updateUser;
     }
-
+    // Метод getUser возвращает информацию о текущем пользователе
+    // Метод получает текущего пользователя, преобразует его в объект UserDTO с помощью маппера
+    // и возвращает этот объект.
     @Override
     public UserDTO getUser() {
         UserEntity user = getCurrentUser();
         return userMapper.toUserDto(user);
     }
-
+    // Метод updatePassword обновляет пароль пользователя
+    // В параметре передается объект NewPasswordDTO с новым паролем и текущим паролем пользователя.
+    // Метод проверяет длину нового пароля, получает текущего пользователя, загружает его данные из БД,
+    // проверяет совпадение текущего пароля с паролем из БД, кодирует новый пароль и сохраняет изменения в БД.
     @Override
     public void updatePassword(NewPasswordDTO newPasswordDTO) {
         String newPassword = newPasswordDTO.getNewPassword();
@@ -74,18 +82,26 @@ public class UserServiceImpl implements UserService {
         user.setPassword(encodedNewPassword);
         userRepository.saveAndFlush(user);
     }
-
+    // Метод updateAvatar обновляет аватар пользователя
+    // В параметре передается файл изображения.
+    // Метод получает текущего пользователя, загружает изображение с помощью сервиса ImageService,
+    // сохраняет информацию об изображении в БД и обновляет аватар пользователя в БД.
     @Override
     public void updateAvatar(MultipartFile image) {
+        // Получаем текущего пользователя
         UserEntity user = getCurrentUser();
+        // Загружаем изображение с помощью сервиса ImageService
         ImageEntity imageEntity = imageService.downloadImage(image);
         user.setImageEntity(imageEntity);
+        // Сохраняем информацию об изображении в БД
         userRepository.saveAndFlush(user);
     }
 
     /**
-     * Получение инорфмации о текущем авторизованном пользователе
+     * Приватный метод getCurrentUser получает текущего авторизованного пользователя.
      */
+    // Метод получает имя пользователя из контекста безопасности, находит пользователя в БД по email
+    // и возвращает объект UserEntity.
     private UserEntity getCurrentUser() {
         String userName = SecurityContextHolder.getContext().getAuthentication().getName();
         return userRepository.findByEmail(userName);

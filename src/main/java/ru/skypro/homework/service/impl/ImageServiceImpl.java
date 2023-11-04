@@ -23,6 +23,7 @@ public class ImageServiceImpl implements ImageService {
     private static final String DOWNLOAD_DIRECTORY = "src/main/resources/images/";
 
 
+    // Конструктор класса, принимает репозиторий
     public ImageServiceImpl(ImageRepository imageRepository) {
         this.imageRepository = imageRepository;
     }
@@ -56,6 +57,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    // Метод getUserImage возвращает изображение пользователя
     @Override
     public byte[] getUserImage(String id) {
         try {
@@ -71,6 +73,7 @@ public class ImageServiceImpl implements ImageService {
         }
     }
 
+    // Приватный метод loadFile загружает файл изображения по указанному пути
     private byte[] loadFile(String path) throws IOException {
         Path imagePath = Paths.get(path);
         return Files.readAllBytes(imagePath);
