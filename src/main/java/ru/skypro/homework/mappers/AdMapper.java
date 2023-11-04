@@ -24,7 +24,7 @@ public class AdMapper{
         adDTO.price( ad.getPrice() );
         adDTO.title( ad.getTitle() );
         if (ad.getImage()!=null){
-            adDTO.image( "/images/" + ad.getImage() );
+            adDTO.image( "/images/" + ad.getImage().getImageName() );
         }
         adDTO.author( ad.getUser().getId() );
 
